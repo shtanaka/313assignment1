@@ -57,7 +57,7 @@ class simulator:
 				if j % self.A == 0:
 					print 'BLOCK:' + str(i) + '/BIT:' + str(j) + '/NUMERR:' + str(self.numErr)
 
-			if self.numErr > 1:
+		if self.numErr > 1:
 			self.numErr = 0
 			trials += 1
 			if trials != self.t:

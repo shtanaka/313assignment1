@@ -32,7 +32,7 @@ class simulator:
 			self.numErr = 0
 			self.trials += 1
 			if self.trials != self.T :
-				self.burst()
+				self.nonburst()
 			else :
 				print  "Not worthy"
 		else :

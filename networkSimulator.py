@@ -28,7 +28,7 @@ class simulator:
 				if j % self.A == 0:
 					print 'BLOCK:' + str(i) + '/BIT:' + str(j) + '/NUMERR:' + str(self.numErr)
 
-		if self.numErr > 1 :
+		if self.numErr > 2 :
 			self.numErr = 0
 			self.trials += 1
 			if self.trials != self.T :
@@ -36,7 +36,7 @@ class simulator:
 			else :
 				print  "Not worthy"
 		else :
-			print str(self.trials) + " Trials"
+			print str(self.trials + 1) + " Trials"
 
 	def burst(self):
 		
@@ -69,7 +69,7 @@ class simulator:
 				if j % self.A == 0:
 					print 'BLOCK:' + str(i) + '/BIT:' + str(j) + '/NUMERR:' + str(self.numErr)
 
-		if self.numErr > 1 :
+		if self.numErr > 2 :
 			self.numErr = 0
 			self.trials += 1
 			if self.trials != self.T :
@@ -124,4 +124,4 @@ if __name__ == "__main__":
 		e = raw_input("Type the probability of error:")
 		B = raw_input("Type the burst length:")
 		N = raw_input("type the non-burst length:")
-		x = simulator(M, K, F, e, B, N, x)
+		x = simulator(M, K, F, e, B, N)

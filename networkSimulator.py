@@ -13,6 +13,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# ttf: total time to receive frames
+# tput: throughput
+# 
+
 import random
 
 class simulator:
@@ -31,12 +36,19 @@ class simulator:
 		if self.numErr > 2 :
 			self.numErr = 0
 			self.trials += 1
-			if self.trials != self.T :
+			if self.trials < self.T :
 				self.nonburst()
+				self.trials = 0
 			else :
 				print  "Not worthy"
+				self.notWorthy += 1
+				self.runtime += (self.trials+1) * self.K * self.F
 		else :
 			print str(self.trials + 1) + " Trials"
+			self.ttf += self.trials * self.F
+			self.trials = 0 
+			self.worthy += 1
+			self.runtime += (self.trials+1) * self.K * self.F
 
 	def burst(self):
 		
@@ -74,17 +86,27 @@ class simulator:
 			self.trials += 1
 			if self.trials != self.T :
 				self.burst()
+				self.trials = 0
 			else :
-				print  "Not worthy"
+				print "Not worthy"
+				self.notWorthy += 1
+				self.runtime += (self.trials+1) * self.K * self.F
 		else :
 			print str(self.trials) + " Trials"
+			self.worthy += 1
+			self.ttf += self.trials * self.F
+			self.trials = 0  
+			self.runtime += (self.trials+1) * self.K * self.F
 
 
 	def call_method(self):
-		if self.M == 'I' :
-			self.nonburst()
-		elif self.M == 'B' :
-			self.burst()
+		while self.runtime < self.R:
+			if self.M == 'I' :
+				self.nonburst()
+			elif self.M == 'B' :
+				self.burst()
+		else :
+			print "worthy: " + str(self.worthy) + " - Not Worthy: " + str(self.notWorthy)
 
 
 	def __init__(self, M, K=4, F=4000, e=0.0001, B=50, N=5000):
@@ -97,10 +119,19 @@ class simulator:
 		self.N = N
 		self.R = 5 * (10**6)
 		self.T = 5
+
 		self.numErr = 0
 		self.trials = 0
+		self.notWorthy = 0
+		self.worthy = 0
+		self.runtime = 0
+		self.tput = 0
+		self.ttf = 0
 
 		self.call_method()
+		self.tput = (self.F * self.worthy * self.F) / self.ttf
+		print self.tput
+
 
 if __name__ == "__main__":
 	

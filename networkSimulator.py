@@ -19,7 +19,7 @@ class simulator:
     
 	def nonburst(self):
 
-		print "### Trial " + str(self.trials+1) + "###"
+		print "### Trial " + str(self.trials+1) + " ###"
 		
 		for i in range(0,self.K):
 			for j in range(0,self.F):
@@ -31,7 +31,7 @@ class simulator:
 		if self.numErr > 1 :
 			self.numErr = 0
 			self.trials += 1
-			if self.trials != self.t :
+			if self.trials != self.T :
 				self.burst()
 			else :
 				print  "Not worthy"
@@ -43,7 +43,7 @@ class simulator:
 		burst = False
 		count = 0
 		
-		print "### Trial " + str(self.trials+1) + "###"
+		print "### Trial " + str(self.trials+1) + " ###"
 
 		for i in range(0,self.K):
 			for j in range(0,self.F) :
@@ -72,14 +72,14 @@ class simulator:
 		if self.numErr > 1 :
 			self.numErr = 0
 			self.trials += 1
-			if self.trials != self.t :
+			if self.trials != self.T :
 				self.burst()
 			else :
 				print  "Not worthy"
 		else :
 			print str(self.trials) + " Trials"
 
-			
+
 	def call_method(self):
 		if self.M == 'I' :
 			self.nonburst()

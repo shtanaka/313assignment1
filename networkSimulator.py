@@ -28,11 +28,15 @@ class simulator:
 				if j % self.A == 0:
 					print 'BLOCK:' + str(i) + '/BIT:' + str(j) + '/NUMERR:' + str(self.numErr)
 
-		if self.numErr > 1:
+		if self.numErr > 1 :
 			self.numErr = 0
 			self.trials += 1
-			if self.trials != self.T:
-				self.nonburst()
+			if self.trials != self.t :
+				self.burst()
+			else :
+				print  "Not worthy"
+		else :
+			print str(self.trials) + " Trials"
 
 	def burst(self):
 		
@@ -65,12 +69,17 @@ class simulator:
 				if j % self.A == 0:
 					print 'BLOCK:' + str(i) + '/BIT:' + str(j) + '/NUMERR:' + str(self.numErr)
 
-		if self.numErr > 1:
+		if self.numErr > 1 :
 			self.numErr = 0
 			self.trials += 1
-			if self.trials != self.t:
+			if self.trials != self.t :
 				self.burst()
+			else :
+				print  "Not worthy"
+		else :
+			print str(self.trials) + " Trials"
 
+			
 	def call_method(self):
 		if self.M == 'I' :
 			self.nonburst()
@@ -98,7 +107,7 @@ if __name__ == "__main__":
 	print "Standard Simulator: "
 	print "M = choosen"
 	print "A = 50"
-	print "K = 1"
+	print "K = 4"
 	print "F = 4000"
 	print "e = 0.0001"
 	print "B = 50"

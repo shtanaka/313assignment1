@@ -18,6 +18,9 @@ import random
 class simulator:
     
 	def nonburst(self):
+
+		print "### Trial " + str(self.trials+1) + "###"
+		
 		for i in range(0,self.K):
 			for j in range(0,self.F):
 				if random.random() <= self.e:
@@ -25,13 +28,18 @@ class simulator:
 				if j % self.A == 0:
 					print 'BLOCK:' + str(i) + '/BIT:' + str(j) + '/NUMERR:' + str(self.numErr)
 
+		if self.numErr > 1:
+			self.numErr = 0
+			self.trials += 1
+			if self.trials != self.T:
+				self.nonburst()
+
 	def burst(self):
 		
 		burst = False
 		count = 0
-		trials = 0
 		
-		print "### Trial " + str(trials+1) + "###"
+		print "### Trial " + str(self.trials+1) + "###"
 
 		for i in range(0,self.K):
 			for j in range(0,self.F) :
@@ -59,9 +67,9 @@ class simulator:
 
 		if self.numErr > 1:
 			self.numErr = 0
-			trials += 1
-			if trials != self.t:
-			self.burst()
+			self.trials += 1
+			if self.trials != self.t:
+				self.burst()
 
 	def call_method(self):
 		if self.M == 'I' :
@@ -81,6 +89,7 @@ class simulator:
 		self.R = 5 * (10**6)
 		self.T = 5
 		self.numErr = 0
+		self.trials = 0
 
 		self.call_method()
 

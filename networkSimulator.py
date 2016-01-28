@@ -16,33 +16,40 @@
 
 # ttf: total time to receive frames
 # tput: throughput
+# Rules implemented:
+# it tries to sent K blocks of F bits. if a block fails, count as trial.
 # 
 
 import random
 
 class simulator:
     
-	def nonburst(self):
+	def nonburst(self, sentPackages=0):
 
 		print "### Trial " + str(self.trials+1) + " ###"
-		
-		for i in range(0,self.K):
+		for i in range(sentPackages,self.K):
 			for j in range(0,self.F):
 				if random.random() <= self.e:
 					self.numErr += 1
 				if j % self.A == 0:
 					print 'BLOCK:' + str(i) + '/BIT:' + str(j) + '/NUMERR:' + str(self.numErr)
+			
+			if self.numErr > 2 :
+				break
+			else :
+				self.numErr = 0
+				sentPackages += 1
 
 		if self.numErr > 2 :
 			self.numErr = 0
 			self.trials += 1
 			if self.trials < self.T :
-				self.nonburst()
+				self.nonburst(sentPackages)
 				self.trials = 0
 			else :
 				print  "Not worthy"
 				self.notWorthy += 1
-				self.runtime += (self.trials+1) * self.K * self.F
+				self.runtime += (self.trials+1) * (self.K - sentPackages) * self.F
 		else :
 			print str(self.trials + 1) + " Trials"
 			self.ttf += self.trials * self.F
@@ -50,14 +57,14 @@ class simulator:
 			self.worthy += 1
 			self.runtime += (self.trials+1) * self.K * self.F
 
-	def burst(self):
+	def burst(self, sentPackages=0):
 		
 		burst = False
 		count = 0
 		
 		print "### Trial " + str(self.trials+1) + " ###"
-
-		for i in range(0,self.K):
+		sentPackages = 0
+		for i in range(sentPackages,self.K):
 			for j in range(0,self.F) :
 				if burst is False :
 					count += 1
@@ -80,17 +87,22 @@ class simulator:
 						self.numErr += 1
 				if j % self.A == 0:
 					print 'BLOCK:' + str(i) + '/BIT:' + str(j) + '/NUMERR:' + str(self.numErr)
+			if self.numErr > 2 :
+				break
+			else :
+				self.numErr = 0
+				sentPackages += 1
 
 		if self.numErr > 2 :
 			self.numErr = 0
 			self.trials += 1
-			if self.trials != self.T :
-				self.burst()
+			if self.trials < self.T :
+				self.burst(sentPackages)
 				self.trials = 0
 			else :
 				print "Not worthy"
 				self.notWorthy += 1
-				self.runtime += (self.trials+1) * self.K * self.F
+				self.runtime += (self.trials+1) * (self.K - sentPackages) * self.F
 		else :
 			print str(self.trials) + " Trials"
 			self.worthy += 1
@@ -112,11 +124,11 @@ class simulator:
 	def __init__(self, M, K=4, F=4000, e=0.0001, B=50, N=5000):
 		self.M = M
 		self.A = 50
-		self.K = K
-		self.F = F
-		self.e = e
-		self.B = B
-		self.N = N
+		self.K = int(K)
+		self.F = int(F)
+		self.e = float(e)
+		self.B = float(B)
+		self.N = float(N)
 		self.R = 5 * (10**6)
 		self.T = 5
 
@@ -129,8 +141,6 @@ class simulator:
 		self.ttf = 0
 
 		self.call_method()
-		self.tput = (self.F * self.worthy * self.F) / self.ttf
-		print self.tput
 
 
 if __name__ == "__main__":

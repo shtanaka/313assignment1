@@ -14,112 +14,123 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# ttf: total time to receive frames
-# tput: throughput
-# Rules implemented:
-# it tries to sent K blocks of F bits. if a block fails, count as trial.
-# 
 
 import random
+import math
 
 class simulator:
     
-	def nonburst(self, sentPackages=0):
 
-		print "### Trial " + str(self.trials+1) + " ###"
-		for i in range(sentPackages,self.K):
-			for j in range(0,self.F):
+
+	def nonburst(self, sentBlocks=0):
+		
+		# recursive code to nonburst. it receive as 
+		# parameters how many blocks were sent. starts at 0
+		
+		msgSize = self.sizeBlock + self.r
+		# for each block not sent yet
+		for i in range(sentBlocks, self.K) :
+			# for each bit of the block, including the checkbits
+			for j in range(0, int(msgSize)):
+				# if error occurs, count++
 				if random.random() <= self.e:
 					self.numErr += 1
-				if j % self.A == 0:
-					print 'BLOCK:' + str(i) + '/BIT:' + str(j) + '/NUMERR:' + str(self.numErr)
-			
-			if self.numErr > 2 :
+			# if after send the block there's more than 1 error, go for next trial
+			if self.numErr > 1 :
 				break
+			# else mark the block as sent
 			else :
 				self.numErr = 0
-				sentPackages += 1
-
-		if self.numErr > 2 :
+				sentBlocks += 1
+		# check if it reached the limit of trials. if not, call nonburst()
+		# passing as param how many blocks were sent. else increases as
+		# not worthy	
+		if self.numErr > 1 :
 			self.numErr = 0
 			self.trials += 1
+
 			if self.trials < self.T :
-				self.nonburst(sentPackages)
-				self.trials = 0
+				self.runtime += msgSize + 50
+				self.nonburst(sentBlocks)
 			else :
 				print  "Not worthy"
+				self.runtime += msgSize + 50
 				self.notWorthy += 1
-				self.runtime += (self.trials+1) * (self.K - sentPackages) * self.F
+				self.totalTrials += self.trials
+				self.trials = 0
+		# if low # of errors or 0 blocks divided, increase worthy
 		else :
 			print str(self.trials + 1) + " Trials"
-			self.ttf += self.trials * self.F
+			self.runtime += self.F + 50
+			self.totalTrials += self.trials + 1
 			self.trials = 0 
 			self.worthy += 1
-			self.runtime += (self.trials+1) * self.K * self.F
 
-	def burst(self, sentPackages=0):
+	def burst(self, sentBlocks=0):
 		
-		burst = False
-		count = 0
-		
-		print "### Trial " + str(self.trials+1) + " ###"
-		sentPackages = 0
-		for i in range(sentPackages,self.K):
-			for j in range(0,self.F) :
-				if burst is False :
-					count += 1
-					if count == self.N :
+		# recursive code to burst. it receive as 
+		# parameters how many blocks were sent. starts at 0
+		# values to call the burst time
+
+		msgSize = self.sizeBlock + self.r
+		for i in range(sentBlocks, self.K) :
+			for j in range(0, int(msgSize)):
+				# increment burstTime
+				if self.burstTime is False :
+					self.count += 1
+					if self.count == self.N :
 						print "Burst"
-						count = 0
-						burst = not burst
+						self.count = 0
+						self.burstTime = not self.burstTime
 				else :
-					count += 1
-					if count == self.B :
+					self.count += 1
+					if self.count == self.B :
 						print "End of Burst"
-						count = 0
-						burst = not burst
-					
-				if burst :	
+						self.count = 0
+						self.burstTime = not self.burstTime
+
+				if self.burstTime :	
 					if random.random() <= self.e * ( self.N + self.B ) / self.B:
 						self.numErr += 1
 				else :
 					if random.random() <= self.e:
-						self.numErr += 1
-				if j % self.A == 0:
-					print 'BLOCK:' + str(i) + '/BIT:' + str(j) + '/NUMERR:' + str(self.numErr)
-			if self.numErr > 2 :
+						self.numErr += 1		
+				
+			if self.numErr > 1 :
 				break
 			else :
 				self.numErr = 0
-				sentPackages += 1
-
-		if self.numErr > 2 :
+				sentBlocks += 1
+		
+		if self.numErr > 1 :
 			self.numErr = 0
 			self.trials += 1
 			if self.trials < self.T :
-				self.burst(sentPackages)
-				self.trials = 0
+				self.runtime += msgSize + 50
+				self.nonburst(sentBlocks)
 			else :
-				print "Not worthy"
+				print  "Not worthy"
+				self.runtime += msgSize + 50
 				self.notWorthy += 1
-				self.runtime += (self.trials+1) * (self.K - sentPackages) * self.F
+				self.totalTrials += self.trials
+				self.trials = 0
 		else :
-			print str(self.trials) + " Trials"
+			print str(self.trials + 1) + " Trials"
+			self.runtime += self.F + 50
+			self.totalTrials += self.trials + 1
+			self.trials = 0 
 			self.worthy += 1
-			self.ttf += self.trials * self.F
-			self.trials = 0  
-			self.runtime += (self.trials+1) * self.K * self.F
+			
 
-
-	def call_method(self):
+	def call_methods(self):
+		# while runtime is not 5 * 10**6 ms
 		while self.runtime < self.R:
 			if self.M == 'I' :
 				self.nonburst()
 			elif self.M == 'B' :
 				self.burst()
 		else :
-			print "worthy: " + str(self.worthy) + " - Not Worthy: " + str(self.notWorthy)
-
+			print "Delivered blocks: " + str(self.worthy) + " in " + str(self.totalTrials) + " trials."
 
 	def __init__(self, M, K=4, F=4000, e=0.0001, B=50, N=5000):
 		self.M = M
@@ -132,15 +143,20 @@ class simulator:
 		self.R = 5 * (10**6)
 		self.T = 5
 
+		self.burstTime = False
+		self.count = 0
 		self.numErr = 0
 		self.trials = 0
+		self.totalTrials = 0
 		self.notWorthy = 0
 		self.worthy = 0
 		self.runtime = 0
 		self.tput = 0
 		self.ttf = 0
+		self.sizeBlock = self.F/self.K
+		self.r = math.ceil(math.log (self.sizeBlock, 2))
 
-		self.call_method()
+		self.call_methods()
 
 
 if __name__ == "__main__":

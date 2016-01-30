@@ -20,7 +20,7 @@ import math
 class Simulator:
     
 	
-	def trialCheck(self, numErr, trials) :
+	def trial_check(self, numErr, trials) :
 		if numErr > 1 : 
 			trials += 1
 			if trials < self.T :
@@ -49,7 +49,7 @@ class Simulator:
 				break
 			else :
 				numErr = 0
-		self.trialCheck(numErr, trials)	
+		self.trial_check(numErr, trials)	
 		
 
 	def burst(self, trials=0):
@@ -78,9 +78,9 @@ class Simulator:
 				break
 			else :
 				numErr = 0				
-		self.trialCheck(numErr, trials)
+		self.trial_check(numErr, trials)
 
-	def getResults(self) :
+	def get_results(self) :
 		print self.M
 		print self.A
 		print self.K
@@ -110,7 +110,7 @@ class Simulator:
 			self.thput = float(self.worthy*self.F)
 			self.thput = self.thput/float(self.totalTrials*(self.F+self.K*self.r+50))
 			self.ftr = float(self.totalTrials)/float(self.worthy)
-			self.getResults()
+			self.get_results()
 
 	def __init__(self, M, K=2, F=4000, e=0.0005, B=50, N=5000):
 		self.M = M

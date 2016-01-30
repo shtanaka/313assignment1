@@ -24,7 +24,7 @@ class Simulator:
 	def trial_check(self, numErr, trials) :
 		if numErr > 1 : 
 			trials += 1
-			if trials < self.T :
+			if trials < self.T[0] :
 				self.runtime += self.F + self.K*self.r + 50
 				self.nonburst(trials)
 			else :
@@ -42,6 +42,7 @@ class Simulator:
 		# receives trials as parameter. starts at 0
 		
 		numErr = 0;
+		random.seed = self.T[trials+1]
 		for i in range(0, self.K) :
 			for j in range(0, int(self.sizeBlock + self.r)):
 				if random.random() <= self.e:
@@ -57,6 +58,7 @@ class Simulator:
 		
 		# receives trials as parameter. starts at 0
 		numErr = 0;
+		random.seed = self.T[trials+1]
 		for i in range(0, self.K) :
 			for j in range(0, int(self.sizeBlock + self.r)):
 				if self.isBurst is False :
@@ -90,6 +92,7 @@ class Simulator:
 		print self.B
 		print self.N
 		print self.R
+		print self.T
 		print " "
 		print "------------------"
 		print "Results"
@@ -122,8 +125,7 @@ class Simulator:
 		self.B = int(B)
 		self.N = int(N)
 		self.R = 5 * (10**6)
-		self.T = 5
-
+		self.T = [5,24, 24, 70, 83, 53]
 		self.b = 0
 		self.isBurst = False
 		self.sizeBlock = self.F/self.K

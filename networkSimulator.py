@@ -45,23 +45,6 @@ if __name__ == "__main__":
 	NB2.call_methods()
 	B2.call_methods()
 	
-	#noBursts = [
-    #	go.Bar(
-    #   		x=['case 1', 'case 2'],
-    #   		y=[float(NB.worthy)/float(NB.totalTrials),2],
-    #   		name='no bursts'
-    #		)
-	#]
-	#Bursts = [
-   # 	go.Bar(
-    #   		x=['case 1', 'case 2'],
-     #  		y=[float(B.worthy)/float(B.totalTrials),2],
-      # 		name='bursts'
-    	#	)
-	#]
-
-	#data = [noBursts, Bursts]
-	
 	nonBurstTime = go.Bar(
     	x=['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7'],
     	y=[NB.thput, NB.thput, 0, 0, 0, 0, 0],

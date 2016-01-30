@@ -35,6 +35,7 @@ class Simulator:
 			self.runtime += self.F + self.K*self.r + 50
 			self.totalTrials += trials + 1
 			self.worthy += 1
+			self.thput = self.thput + float(self.F) / (self.F + self.K*self.r + 50)
 
 	
 	def nonburst(self, trials=0): 
@@ -111,8 +112,9 @@ class Simulator:
 			elif self.M == 'B' :
 				self.burst()
 		else :
-			self.thput = float(self.worthy*self.F)
-			self.thput = self.thput/float(self.totalTrials*(self.F+self.K*self.r+50))
+			self.thput = self.thput/self.totalTrials
+			#self.thput = float(self.worthy*self.F)
+			#self.thput = self.thput/float(self.totalTrials*(self.F+self.K*self.r+50))
 			self.ftr = float(self.totalTrials)/float(self.worthy)
 			self.get_results()
 

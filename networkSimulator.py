@@ -40,13 +40,39 @@ if __name__ == "__main__":
 	B = Simulator.Simulator("B")
 	NB.call_methods()
 	B.call_methods()
-	graph_out = [
-    	go.Bar(
-       		x=['no bursts', 'bursts'],
-       		y=[float(NB.worthy)/float(NB.totalTrials), float(B.worthy)/float(B.totalTrials)]
-    		)
-	]
-	plotly.offline.plot(graph_out)
+	
+	#noBursts = [
+    #	go.Bar(
+    #   		x=['case 1', 'case 2'],
+    #   		y=[float(NB.worthy)/float(NB.totalTrials),2],
+    #   		name='no bursts'
+    #		)
+	#]
+	#Bursts = [
+   # 	go.Bar(
+    #   		x=['case 1', 'case 2'],
+     #  		y=[float(B.worthy)/float(B.totalTrials),2],
+      # 		name='bursts'
+    	#	)
+	#]
+
+	#data = [noBursts, Bursts]
+	
+	nonBurstTime = go.Bar(
+    	x=['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7'],
+    	y=[float(NB.worthy*NB.F), 1, 1, 1, 1, 1, 1],
+    	name='non-burst time'
+	)
+	burstTime = go.Bar(
+    	x=['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7'],
+    	y=[float(B.worthy*B.F), 1, 1, 1, 1, 1, 1],
+    	name='burst time'
+	)
+	data = [nonBurstTime, burstTime]
+
+	layout = go.Layout(barmode='group')
+	fig = go.Figure(data=data, layout=layout)
+	plotly.offline.plot(fig)
 
 
 

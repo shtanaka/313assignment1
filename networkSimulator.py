@@ -38,8 +38,12 @@ if __name__ == "__main__":
 	
 	NB = Simulator.Simulator("I")
 	B = Simulator.Simulator("B")
+	NB2 = Simulator.Simulator("I")
+	B2 = Simulator.Simulator("B")
 	NB.call_methods()
 	B.call_methods()
+	NB2.call_methods()
+	B2.call_methods()
 	
 	#noBursts = [
     #	go.Bar(
@@ -60,12 +64,12 @@ if __name__ == "__main__":
 	
 	nonBurstTime = go.Bar(
     	x=['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7'],
-    	y=[float(NB.worthy*NB.F), 1, 1, 1, 1, 1, 1],
+    	y=[NB.thput, NB.thput, 0, 0, 0, 0, 0],
     	name='non-burst time'
 	)
 	burstTime = go.Bar(
     	x=['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7'],
-    	y=[float(B.worthy*B.F), 1, 1, 1, 1, 1, 1],
+    	y=[B.thput, B2.thput, 0, 0, 0, 0, 0, 0],
     	name='burst time'
 	)
 	data = [nonBurstTime, burstTime]

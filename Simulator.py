@@ -17,6 +17,7 @@
 
 import random
 import math
+import numpy as np
 
 class Simulator:
     
@@ -31,13 +32,15 @@ class Simulator:
 				self.runtime += 50
 				self.notWorthy += 1
 				self.totalTrials += trials
+				self.fth.append([0, trials])
+				self.ftr.append(trials)
 		else :
 			self.runtime += self.F + self.K*self.r + 50
 			self.totalTrials += trials + 1
 			self.worthy += 1
-			self.thput = self.thput + float(self.F) / (self.F + self.K*self.r + 50)
+			self.ftr.append((trials+1))
+			self.fth.append([float(self.F) / float((self.F + self.K*self.r + 50)), trials+1])
 
-	
 	def nonburst(self, trials=0): 
 		
 		# receives trials as parameter. starts at 0
@@ -98,11 +101,32 @@ class Simulator:
 		print "------------------"
 		print "Results"
 		print "FRAME TRANSMISSION"
-		print self.ftr
+		print str(self.frametx) + " " + str(self.rc1) + " " + str(self.rc2) 
 		print "THROUGHPUT"
-		print self.thput
+		print str(self.thput) + " " + str(self.tc1) + " " + str(self.tc2) 
 		print "------------------"
 		print " "
+
+	def find_throughput(self) :
+		fth = []
+		for i in self.fth:
+			fth.append(i[0])
+		self.thput = np.sum(fth)/self.totalTrials
+		s2 = 0.0
+		for i in self.fth :
+			s2 = s2 + (i[0] - self.thput)**2/i[1]
+		s = s2**0.5
+		self.tc1 = self.thput - 1.962*s/self.totalTrials
+		self.tc2 = self.thput + 1.962*s/self.totalTrials
+
+	def find_frametx(self) :
+		self.frametx = float(np.sum(self.ftr))/self.worthy
+		s2 = 0.0
+		for i in self.ftr :
+			s2 = s2 + (i - self.frametx)**2/i
+		s = s2**0.5
+		self.rc1 = self.frametx - 1.962*s/self.worthy
+		self.rc2 = self.frametx + 1.962*s/self.worthy
 
 	def call_methods(self) :
 		# while runtime is not 5 * 10**6 ms
@@ -112,10 +136,9 @@ class Simulator:
 			elif self.M == 'B' :
 				self.burst()
 		else :
-			self.thput = self.thput/self.totalTrials
-			#self.thput = float(self.worthy*self.F)
-			#self.thput = self.thput/float(self.totalTrials*(self.F+self.K*self.r+50))
-			self.ftr = float(self.totalTrials)/float(self.worthy)
+			self.find_throughput()
+			self.find_frametx()
+			#self.ftr = float(self.totalTrials)/float(self.worthy)
 			self.get_results()
 
 	def __init__(self, M, K=2, F=4000, e=0.0005, B=50, N=5000):
@@ -132,9 +155,14 @@ class Simulator:
 		self.isBurst = False
 		self.sizeBlock = self.F/self.K
 		self.r = math.ceil(math.log (self.sizeBlock, 2))
-		
+		self.fth = []
+		self.tc1 = 0
+		self.tc2 = 0
 		self.thput = 0
-		self.ftr = 0
+		self.ftr = []
+		self.rc1 = 0
+		self.rc2 = 0
+		self.frametx = 0
 		self.totalTrials = 0
 		self.notWorthy = 0
 		self.worthy = 0

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # coding=UTF-8 
-# Copyright 2013 Edson Gustavo Santiago Silva
+# Copyright 2016 Edson Gustavo Santiago Silva
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# install numpy and plotly
 
 import plotly
 import plotly.graph_objs as go
@@ -36,30 +37,43 @@ if __name__ == "__main__":
 	# N = raw_input("type the non-burst length:")
 	# Simulator(M, K, F, e, B, N)
 	
-	NB = Simulator.Simulator("I")
+	NB1 = Simulator.Simulator("B", e=0.0005, N=5000, B=50)
+	NB2 = Simulator.Simulator("B", e=0.0005, N=1000, B=50)
+	NB3 = Simulator.Simulator("B", e=0.0005, N=5000, B=500)
+	NB4 = Simulator.Simulator("B", e=0.0005, N=1000, B=500)
+	
+	NB1.call_methods()
+	NB2.call_methods()
+	NB3.call_methods()
+	NB4.call_methods()
 	#B = Simulator.Simulator("B")
 	#NB2 = Simulator.Simulator("I")
 	#B2 = Simulator.Simulator("B")
-	NB.call_methods()
+	
 	#B.call_methods()
 	#NB2.call_methods()
 	#B2.call_methods()
 	
-	#nonBurstTime = go.Bar(
-    #	x=['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7'],
-    #	y=[NB.thput, NB2.thput, 0, 0, 0, 0, 0],
-    #	name='non-burst time'
-	#)
-	#burstTime = go.Bar(
-    #	x=['case1', 'case2', 'case3', 'case4', 'case5', 'case6', 'case7'],
-    #	y=[B.thput, B2.thput, 0, 0, 0, 0, 0, 0],
-    #	name='burst time'
-	#)
-	#data = [nonBurstTime, burstTime]
+	BurstTime = go.Bar(
+    	x=['(N=5000,B=50)', '(N=1000,B=50)', '(N=5000,B=500)', '(N=1000,B=500)'],
+    	y=[NB1.thput, NB2.thput, NB3.thput, NB4.thput],
+    	name='Throughput'
+	)
+	c1 = go.Bar(
+    	x=['(N=5000,B=50)', '(N=1000,B=50)', '(N=5000,B=500)', '(N=1000,B=500)'],
+    	y=[NB1.tc1, NB2.tc1, NB3.tc1, NB4.tc1],
+    	name='c1'
+	)
+	c2 = go.Bar(
+    	x=['(N=5000,B=50)', '(N=1000,B=50)', '(N=5000,B=500)', '(N=1000,B=500)'],
+    	y=[NB1.tc2, NB2.tc2, NB3.tc2, NB4.tc2],
+    	name='c2'
+	)	
+	data = [ c2, BurstTime, c1]
 
-	#layout = go.Layout(barmode='group')
-	#fig = go.Figure(data=data, layout=layout)
-	#plotly.offline.plot(fig)
+	layout = go.Layout(barmode='group')
+	fig = go.Figure(data=data, layout=layout)
+	plotly.offline.plot(fig)
 
 
 

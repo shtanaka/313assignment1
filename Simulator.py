@@ -17,7 +17,6 @@
 
 import random
 import math
-import numpy as np
 
 class Simulator:
     
@@ -109,9 +108,11 @@ class Simulator:
 
 	def find_throughput(self) :
 		fth = []
+		fths = 0
 		for i in self.fth:
 			fth.append(i[0])
-		self.thput = np.sum(fth)/self.totalTrials
+			fths += i[0]
+		self.thput = fths/self.totalTrials
 		s2 = 0.0
 		for i in self.fth :
 			s2 = s2 + (i[0] - self.thput)**2/i[1]
@@ -120,7 +121,10 @@ class Simulator:
 		self.tc2 = self.thput + 1.962*s/self.totalTrials
 
 	def find_frametx(self) :
-		self.frametx = float(np.sum(self.ftr))/self.worthy
+		ftrs = 0
+		for i in self.ftr :
+			ftrs += i
+		self.frametx = float(ftrs)/self.worthy
 		s2 = 0.0
 		for i in self.ftr :
 			s2 = s2 + (i - self.frametx)**2/i

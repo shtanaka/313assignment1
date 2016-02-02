@@ -15,8 +15,8 @@
 # limitations under the License.
 # install numpy and plotly
 
-import plotly
-import plotly.graph_objs as go
+# import plotly
+# import plotly.graph_objs as go
 import Simulator
 
 if __name__ == "__main__":
@@ -37,10 +37,10 @@ if __name__ == "__main__":
 	# N = raw_input("type the non-burst length:")
 	# Simulator(M, K, F, e, B, N)
 	
-	NB1 = Simulator.Simulator("B", e=0.0005, N=5000, B=50)
-	NB2 = Simulator.Simulator("B", e=0.0005, N=1000, B=50)
-	NB3 = Simulator.Simulator("B", e=0.0005, N=5000, B=500)
-	NB4 = Simulator.Simulator("B", e=0.0005, N=1000, B=500)
+	NB1 = Simulator.Simulator("B", e=0.0013, N=5000, B=50, K=40)
+	NB2 = Simulator.Simulator("B", e=0.0013, N=1000, B=50, K=40)
+	NB3 = Simulator.Simulator("B", e=0.0013, N=5000, B=500, K=40)
+	NB4 = Simulator.Simulator("B", e=0.0013, N=1000, B=500, K=40)
 	
 	NB1.call_methods()
 	NB2.call_methods()
@@ -54,26 +54,26 @@ if __name__ == "__main__":
 	#NB2.call_methods()
 	#B2.call_methods()
 	
-	BurstTime = go.Bar(
-    	x=['(N=5000,B=50)', '(N=1000,B=50)', '(N=5000,B=500)', '(N=1000,B=500)'],
-    	y=[NB1.thput, NB2.thput, NB3.thput, NB4.thput],
-    	name='Throughput'
-	)
-	c1 = go.Bar(
-    	x=['(N=5000,B=50)', '(N=1000,B=50)', '(N=5000,B=500)', '(N=1000,B=500)'],
-    	y=[NB1.tc1, NB2.tc1, NB3.tc1, NB4.tc1],
-    	name='c1'
-	)
-	c2 = go.Bar(
-    	x=['(N=5000,B=50)', '(N=1000,B=50)', '(N=5000,B=500)', '(N=1000,B=500)'],
-    	y=[NB1.tc2, NB2.tc2, NB3.tc2, NB4.tc2],
-    	name='c2'
-	)	
-	data = [ c2, BurstTime, c1]
-
-	layout = go.Layout(barmode='group')
-	fig = go.Figure(data=data, layout=layout)
-	plotly.offline.plot(fig)
+	#BurstTime = go.Bar(
+    #	x=['(N=5000,B=50)', '(N=1000,B=50)', '(N=5000,B=500)', '(N=1000,B=500)'],
+    #	y=[NB1.thput, NB2.thput, NB3.thput, NB4.thput],
+    #	name='Throughput'
+	#)
+	#c1 = go.Bar(
+    #	x=['(N=5000,B=50)', '(N=1000,B=50)', '(N=5000,B=500)', '(N=1000,B=500)'],
+    #	y=[NB1.tc1, NB2.tc1, NB3.tc1, NB4.tc1],
+    #	name='c1'
+	#)
+	#c2 = go.Bar(
+    #	x=['(N=5000,B=50)', '(N=1000,B=50)', '(N=5000,B=500)', '(N=1000,B=500)'],
+    #	y=[NB1.tc2, NB2.tc2, NB3.tc2, NB4.tc2],
+    #	name='c2'
+	#)	
+	#data = [ c2, BurstTime, c1]
+	#
+	#layout = go.Layout(barmode='group')
+	#fig = go.Figure(data=data, layout=layout)
+	#plotly.offline.plot(fig)
 
 
 
